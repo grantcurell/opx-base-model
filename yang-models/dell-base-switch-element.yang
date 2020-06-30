@@ -105,6 +105,46 @@ identity switch-element-base {
 * Configuration of the core elements of the Switch
 */
 
+typedef traffic {
+    type enumeration {
+        enum "ECMP_NON_IP" {
+            value 1;
+    description "ECMP routing: flow of non-IP ethernet frames";
+        }
+        enum "LAG_NON_IP" {
+            value 2;
+    description "LAG routing: flow of non-IP ethernet frames";
+        }
+        enum "ECMP_IPV4" {
+            value 3;
+    description "ECMP routing: flow of IPv4 packets";
+        }
+        enum "ECMP_IPV4_IN_IPV4" {
+            value 4;
+    description "ECMP routing: flow of IPv4 packets with
+                            IPv4 packets tunnelled inside them";
+        }
+        enum "ECMP_IPV6" {
+            value 5;
+    description "ECMP routing: flow of IPv6 packets";
+        }
+        enum "LAG_IPV4" {
+            value 6;
+    description "LAG routing: flow of IPv4 packets";
+        }
+        enum "LAG_IPV4_IN_IPV4" {
+            value 7;
+    description "ECMP routing: flow of IPv4 packets with
+                            IPv4 packets tunnelled inside them";
+        }
+        enum "LAG_IPV6" {
+            value 8;
+    description "LAG routing: traffic flow is identified as IPv6 packets";
+        }
+    }
+    description "Enumeration of different types of traffic routing categories";
+}
+
 typedef hash-algorithm {
     type enumeration {
 	      enum "XOR" {
@@ -153,212 +193,246 @@ typedef switching-mode {
     description "Enumeration of all possible switching modes";
 }
 
-typedef hash-fields {
+typedef field {
     type enumeration {
-	      enum "src-ip" {
-	        value 1;
-	      }
-	      enum "dest-ip" {
-	        value 2;
-	      }
-	      enum "vlan-id" {
-	        value 3;
-	      }
-	      enum "ip-protocol" {
-	        value 4;
-	      }
-	      enum "ethertype" {
-	        value 5;
-	      }
-	      enum "l4-src-port" {
-	        value 6;
-	      }
-	      enum "l4-dest-port" {
-	        value 7;
-	      }
-	      enum "src-mac" {
-	        value 8;
-	      }
-	      enum "dest-mac" {
-	        value 9;
-	      }
-	      enum "in-port" {
-	        value 10;
-	      }
+        enum "src-ip" {
+            value 1;
+            description "Traffic flow is identified by the source IP";
+        }
+        enum "dest-ip" {
+            value 2;
+            description "Traffic flow is identified by the destination IP";
+        }
+        enum "inner-src-ip" {
+            value 3;
+            description "Traffic flow is identified by the source IP of the tunnelled packet";
+        }
+        enum "inner-dst-ip" {
+            value 4;
+            description "Traffic flow is identified by the destination IP of the tunnelled packet";
+        }
+        enum "vlan-id" {
+            value 5;
+            description "Traffic flow is identified by the VLAN ID in the packet";
+        }
+        enum "ip-protocol" {
+            value 6;
+            description "Traffic flow is identified by the IP protocol type(v4/v6)";
+        }
+        enum "ethertype" {
+            value 7;
+            description "Traffic flow is identified by the IP protocol ether-type";
+        }
+        enum "l4-src-port" {
+            value 8;
+            description "Traffic flow is identified by the source port in the packet";
+        }
+        enum "l4-dest-port" {
+            value 9;
+            description "Traffic flow is identified by the destination port in the packet";
+        }
+        enum "src-mac" {
+            value 10;
+            description "Traffic flow is identified by the source MAC address";
+        }
+        enum "dest-mac" {
+            value 11;
+            description "Traffic flow is identified by the destination MAC address";
+        }
+        enum "in-port" {
+            value 12;
+            description "Traffic flow is identified by the front-panel port the packet is received at";
+        }
     }
-    description "Enumeration of all possible fields to be hashed";
+    description "Enumeration of different types of packet fields to check for routing";
 }
 
-    typedef subsystem{
-        type enumeration{
-            enum "unspecified"{
-                value 1;
-            }
-            enum "switch"{
-                value 2;
-            }
-            enum "port"{
-                value 3;
-            }
-            enum "fdb"{
-                value 4;
-            }
-            enum "vlan"{
-                value 5;
-            }
-            enum "virtual-router"{
-                value 6;
-            }
-             enum "route"{
-                value 7;
-            }
-            enum "next-hop"{
-                value 8;
-            }
-            enum "next-hop-group"{
-                value 9;
-            }
-            enum "router-interface"{
-                value 10;
-            }
-            enum "neighbor"{
-                value 11;
-            }
-            enum "acl"{
-                value 12;
-            }
-             enum "host_interface"{
-                value 13;
-            }
-            enum "mirror"{
-                value 14;
-            }
-            enum "samplepacket"{
-                value 15;
-            }
-            enum "stp"{
-                value 16;
-            }
-            enum "lag"{
-                value 17;
-            }
-            enum "policer"{
-                value 18;
-            }
-             enum "wred"{
-                value 19;
-            }
-            enum "qos-maps"{
-                value 20;
-            }
-            enum "qos-queue"{
-                value 21;
-            }
-            enum "scheduler"{
-                value 22;
-            }
-            enum "scheduler-group"{
-                value 23;
-            }
-            enum "all"{
-
-            }
+typedef subsystem{
+    type enumeration{
+        enum "unspecified"{
+            value 1;
         }
-        description "IDs of all the possible subsystems in the switch";
+        enum "switch"{
+            value 2;
+        }
+        enum "port"{
+            value 3;
+        }
+        enum "fdb"{
+            value 4;
+        }
+        enum "vlan"{
+            value 5;
+        }
+        enum "virtual-router"{
+            value 6;
+        }
+            enum "route"{
+            value 7;
+        }
+        enum "next-hop"{
+            value 8;
+        }
+        enum "next-hop-group"{
+            value 9;
+        }
+        enum "router-interface"{
+            value 10;
+        }
+        enum "neighbor"{
+            value 11;
+        }
+        enum "acl"{
+            value 12;
+        }
+            enum "host_interface"{
+            value 13;
+        }
+        enum "mirror"{
+            value 14;
+        }
+        enum "samplepacket"{
+            value 15;
+        }
+        enum "stp"{
+            value 16;
+        }
+        enum "lag"{
+            value 17;
+        }
+        enum "policer"{
+            value 18;
+        }
+            enum "wred"{
+            value 19;
+        }
+        enum "qos-maps"{
+            value 20;
+        }
+        enum "qos-queue"{
+            value 21;
+        }
+        enum "scheduler"{
+            value 22;
+        }
+        enum "scheduler-group"{
+            value 23;
+        }
+        enum "all"{
+
+        }
+    }
+    description "IDs of all the possible subsystems in the switch";
+}
+
+typedef log-level{
+    type enumeration{
+        enum "debug"{
+            value 1;
+        }
+        enum "info"{
+            value 2;
+        }
+        enum "notice"{
+            value 3;
+        }
+        enum "warning"{
+            value 4;
+        }
+        enum "error"{
+            value 5;
+        }
+        enum "critical"{
+            value 6;
+        }
+    }
+    description "Various log levels that a subsystem allows";
+}
+
+typedef profile-name {
+    type string {
+        length "1..32";
+    }
+    description "Type for the user defined profile name.";
+}
+typedef uft-mode {
+    type enumeration {
+        enum "default-mode" {
+            value 1;
+        }
+        enum "scaled-l2" {
+            value 2;
+        }
+        enum "scaled-l3-routes" {
+            value 3;
+        }
+        enum "scaled-l3-hosts" {
+            value 4;
+        }
+    }
+    description "Enumeration of all possible values for the Unified Forwarding Table(UFT) mode";
+}
+
+typedef pfc-dlr-action {
+    type enumeration {
+        enum DROP {
+            value 0;
+            description "Drop all packets already enqueued and newly received packets";
+        }
+        enum FORWARD {
+            value 1;
+            description "Forwards packets, ignoring incoming PFC pause frames from neighbor device";
+        }
+    }
+    description "Enumeration of types of actions that the system performs on recovery from deadlock situation for the configured recovery time interval";
+}
+
+typedef bst-tracking-mode {
+    type enumeration {
+        enum "peak" {
+            value 1;
+            description "Peak mode provides buffer counter maximum for a given time period and tracks peak usage";
+        }
+        enum "current" {
+            value 2;
+            description "Current mode provides the instantaneous value of buffer usage";
+        }
+    }
+    description "Enumeration of all possible values for the BST tracking mode";
+}
+
+grouping mode-info {
+    leaf l2-mac-table-size {
+        type uint32;
+        description "l2 table size";
+    }
+    leaf l3-route-table-size {
+        type uint32;
+        description "l3 table size";
+    }
+    leaf host-table-size {
+        type uint32;
+        description "ARP/NBR table size";
+    }
+    description "Attribute for table size in various modes";
+}
+
+list entry {
+    key "obj-type";
+
+    // QUALIFIER : Target
+
+    leaf obj-type {
+        type traffic;
+        description "Type of the incoming traffic";
     }
 
-    typedef log-level{
-        type enumeration{
-            enum "debug"{
-                value 1;
-            }
-            enum "info"{
-                value 2;
-            }
-            enum "notice"{
-                value 3;
-            }
-            enum "warning"{
-                value 4;
-            }
-            enum "error"{
-                value 5;
-            }
-            enum "critical"{
-                value 6;
-            }
-        }
-        description "Various log levels that a subsystem allows";
+    leaf-list std-hash-field {
+        type field;
+        description "A list of packet header fields used for hashing the incoming traffic";
     }
-
-    typedef profile-name {
-        type string {
-            length "1..32";
-        }
-        description "Type for the user defined profile name.";
-    }
-    typedef uft-mode {
-        type enumeration {
-            enum "default-mode" {
-              value 1;
-            }
-            enum "scaled-l2" {
-              value 2;
-            }
-            enum "scaled-l3-routes" {
-              value 3;
-            }
-            enum "scaled-l3-hosts" {
-              value 4;
-            }
-        }
-        description "Enumeration of all possible values for the Unified Forwarding Table(UFT) mode";
-    }
-
-    typedef pfc-dlr-action {
-        type enumeration {
-            enum DROP {
-                value 0;
-                description "Drop all packets already enqueued and newly received packets";
-            }
-            enum FORWARD {
-                value 1;
-                description "Forwards packets, ignoring incoming PFC pause frames from neighbor device";
-            }
-        }
-        description "Enumeration of types of actions that the system performs on recovery from deadlock situation for the configured recovery time interval";
-    }
-
-   typedef bst-tracking-mode {
-        type enumeration {
-            enum "peak" {
-              value 1;
-              description "Peak mode provides buffer counter maximum for a given time period and tracks peak usage";
-            }
-            enum "current" {
-              value 2;
-              description "Current mode provides the instantaneous value of buffer usage";
-            }
-        }
-        description "Enumeration of all possible values for the BST tracking mode";
-    }
-
-    grouping mode-info {
-        leaf l2-mac-table-size {
-            type uint32;
-            description "l2 table size";
-        }
-        leaf l3-route-table-size {
-            type uint32;
-            description "l3 table size";
-        }
-        leaf host-table-size {
-            type uint32;
-            description "ARP/NBR table size";
-        }
-        description "Attribute for table size in various modes";
-    }
-
+    description "Specifies the type of the incoming traffic and the associated hash-fields.";
+}
 
 list switching-entity-env {
     key "switch-id";
@@ -409,8 +483,8 @@ container switching-entities {
         description "The switch lag hash seed value";
     }
 
-    leaf-list lag-hash-fields {
-    	type hash-fields;
+    leaf-list lag-field {
+    	type field;
     	description "The switches hash fields used for lags";
     }
 
@@ -452,8 +526,8 @@ container switching-entities {
         description "The switch ecmp hash seed value";
     }
 
-    leaf-list ecmp-hash-fields {
-    	type hash-fields;
+    leaf-list ecmp-field {
+    	type field;
     	description "The fields used for hasing in the case of ecmp";
     }
 
